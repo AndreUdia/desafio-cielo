@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.intellij.lang.annotations.Pattern;
 
-
 @Entity
 @Getter
 @Setter
@@ -17,10 +16,11 @@ import org.intellij.lang.annotations.Pattern;
 public class PessoaFisica extends Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pessoa_fisica_seq")
+    @SequenceGenerator(name = "pessoa_fisica_seq", sequenceName = "PESSOA_FISICA_SEQ", allocationSize = 1)
     private Long id;
 
+    @Pattern("\"^[0-9]{11}$\"")
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 }
