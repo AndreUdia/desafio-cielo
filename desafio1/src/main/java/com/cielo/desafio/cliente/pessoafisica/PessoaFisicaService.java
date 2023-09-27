@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,11 +31,11 @@ public class PessoaFisicaService {
         this.repository.deleteById(id);
     }
 
-    public Optional<PessoaFisicaDTO> buscarDtoPorUUID(UUID uuid) {
+    public Optional<PessoaFisicaDTO> buscarDtoPorUUID(String uuid) {
         return this.repository.findByUuid(uuid).map(this::converterParaDto);
     }
 
-    public Optional<PessoaFisica> findByUuid(UUID uuid) {
+    public Optional<PessoaFisica> findByUuid(String uuid) {
         return this.repository.findByUuid(uuid);
     }
 }

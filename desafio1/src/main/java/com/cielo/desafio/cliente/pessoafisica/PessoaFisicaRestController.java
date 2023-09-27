@@ -1,16 +1,12 @@
 package com.cielo.desafio.cliente.pessoafisica;
 
-
-import jakarta.validation.Valid;
+import jakarta.validation.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -21,6 +17,7 @@ public class PessoaFisicaRestController {
 
     private final PessoaFisicaService service;
     private final ModelMapper modelMapper;
+    private static Validator validator;
 
     private PessoaFisicaDTO converterParaDto(PessoaFisicaRequest pessoaFisicaRequest){
         return this.modelMapper.map(pessoaFisicaRequest, PessoaFisicaDTO.class);
@@ -30,13 +27,26 @@ public class PessoaFisicaRestController {
         return this.modelMapper.map(pessoaFisicaDTO, PessoaFisica.class);
     }
 
+    private static String validaDados(PessoaFisicaRequest pessoaFisicaRequest) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+        Set<ConstraintViolation<PessoaFisicaRequest>> constraintViolations = validator.validate(pessoaFisicaRequest);
+
+        if (constraintViolations.iterator().hasNext())
+        {
+            return constraintViolations.iterator().next().getMessage();
+        }
+
+        return "";
+    }
+
     @GetMapping
     public ResponseEntity<List<PessoaFisicaDtoRecord>> listarTodas(){
         return new ResponseEntity<>(this.service.listarTodas().stream().map(PessoaFisicaDtoRecord::new).toList(), OK);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<?> buscarPorUUID(@PathVariable UUID uuid) {
+    public ResponseEntity<?> buscarPorUUID(@PathVariable String uuid) {
         Optional<PessoaFisicaDTO> pessoaFisicaDTO = this.service.buscarDtoPorUUID(uuid);
 
         if (pessoaFisicaDTO.isPresent()) {
@@ -47,6 +57,12 @@ public class PessoaFisicaRestController {
 
     @PostMapping
     public ResponseEntity<String> cadastrarPessoaFisica(@RequestBody PessoaFisicaRequest pessoaFisicaRequest) {
+        String validacoes = validaDados(pessoaFisicaRequest);
+
+        if (!validacoes.isEmpty()){
+            return new ResponseEntity<>(validacoes, BAD_REQUEST);
+        }
+
         PessoaFisicaDTO pessoaFisicaDTO = this.converterParaDto(pessoaFisicaRequest);
 
         if (this.service.buscarDtoPorUUID(pessoaFisicaDTO.getUuid()).isPresent()){
@@ -61,7 +77,12 @@ public class PessoaFisicaRestController {
 
     @PatchMapping
     public ResponseEntity<String> alterarPessoaFisica(@RequestBody PessoaFisicaRequest pessoaFisicaRequest) {
-        System.out.println(pessoaFisicaRequest.toString());
+        String validacoes = validaDados(pessoaFisicaRequest);
+
+        if (!validacoes.isEmpty()){
+            return new ResponseEntity<>(validacoes, BAD_REQUEST);
+        }
+
         Optional<PessoaFisica> pessoaFisica = this.service.findByUuid(pessoaFisicaRequest.getUuid());
 
         if (pessoaFisica.isPresent()){
@@ -77,7 +98,7 @@ public class PessoaFisicaRestController {
     }
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<String> excluirElogio(@PathVariable UUID uuid) {
+    public ResponseEntity<String> excluirElogio(@PathVariable String uuid) {
         Optional<PessoaFisica> pessoaFisica = this.service.findByUuid(uuid);
 
         if (pessoaFisica.isPresent()) {

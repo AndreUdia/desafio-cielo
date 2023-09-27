@@ -25,8 +25,4 @@ public class PessoaFisica extends Cliente {
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    public PessoaFisica(UUID uuid, String categoriaComercial, String cpf, String nome, String email) {
-        super();
-    }
-
 }
