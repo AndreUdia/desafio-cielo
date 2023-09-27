@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.intellij.lang.annotations.Pattern;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -20,7 +22,11 @@ public class PessoaFisica extends Cliente {
     @SequenceGenerator(name = "pessoa_fisica_seq", sequenceName = "PESSOA_FISICA_SEQ", allocationSize = 1)
     private Long id;
 
-    @Pattern("\"^[0-9]{11}$\"")
     @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
+
+    public PessoaFisica(UUID uuid, String categoriaComercial, String cpf, String nome, String email) {
+        super();
+    }
+
 }
