@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -17,7 +18,6 @@ public class PessoaFisicaRestController {
 
     private final PessoaFisicaService service;
     private final ModelMapper modelMapper;
-    private static Validator validator;
 
     private PessoaFisicaDTO converterParaDto(PessoaFisicaRequest pessoaFisicaRequest){
         return this.modelMapper.map(pessoaFisicaRequest, PessoaFisicaDTO.class);
@@ -28,8 +28,10 @@ public class PessoaFisicaRestController {
     }
 
     private static String validaDados(PessoaFisicaRequest pessoaFisicaRequest) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        Validator validator;
+        try (ValidatorFactory factory = buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
         Set<ConstraintViolation<PessoaFisicaRequest>> constraintViolations = validator.validate(pessoaFisicaRequest);
 
         if (constraintViolations.iterator().hasNext())
@@ -102,12 +104,10 @@ public class PessoaFisicaRestController {
         Optional<PessoaFisica> pessoaFisica = this.service.findByUuid(uuid);
 
         if (pessoaFisica.isPresent()) {
-            this.service.excluirPessoaFisica(pessoaFisica.get().getId());
+            this.service.excluirPessoaFisica(uuid);
             return new ResponseEntity<>(NO_CONTENT);
         } else {
             return new ResponseEntity<>("Não há cliente cadastrado com o código recebido!", NOT_FOUND);
         }
     }
-
-
 }

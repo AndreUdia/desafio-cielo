@@ -1,14 +1,11 @@
 package com.cielo.desafio.cliente.pessoafisica;
 
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
 @AllArgsConstructor
 public class PessoaFisicaRequest {
 

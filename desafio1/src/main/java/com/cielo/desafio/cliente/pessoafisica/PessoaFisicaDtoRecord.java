@@ -2,8 +2,6 @@ package com.cielo.desafio.cliente.pessoafisica;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.UUID;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record PessoaFisicaDtoRecord(String uuid, String categoriaComercial, String cpf, String nome, String email) {
 

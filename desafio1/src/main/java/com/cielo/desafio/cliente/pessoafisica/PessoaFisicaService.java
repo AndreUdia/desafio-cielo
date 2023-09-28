@@ -27,8 +27,9 @@ public class PessoaFisicaService {
         this.repository.save(pessoaFisica);
     }
 
-    public void excluirPessoaFisica(Long id) {
-        this.repository.deleteById(id);
+    public void excluirPessoaFisica(String uuid) {
+        Optional<PessoaFisica> pessoaFisica = this.findByUuid(uuid);
+        pessoaFisica.ifPresent(pf -> this.repository.deleteById(pf.getId()));
     }
 
     public Optional<PessoaFisicaDTO> buscarDtoPorUUID(String uuid) {

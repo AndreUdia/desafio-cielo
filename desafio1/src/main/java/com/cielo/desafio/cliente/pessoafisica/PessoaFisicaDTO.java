@@ -2,8 +2,6 @@ package com.cielo.desafio.cliente.pessoafisica;
 
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @ToString
@@ -15,5 +13,4 @@ public class PessoaFisicaDTO {
     private String cpf;
     private String nome;
     private String email;
-
 }
