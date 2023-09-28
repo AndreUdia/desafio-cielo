@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ class PessoaFisicaServiceTest {
 
     @InjectMocks
     private PessoaFisicaService service;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     private PessoaFisica pessoaFisica;
 

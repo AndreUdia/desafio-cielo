@@ -21,13 +21,10 @@ public class PessoaJuridica extends Cliente {
     @SequenceGenerator(name = "pessoa_juridica_seq", sequenceName = "PESSOA_JURIDICA_SEQ", allocationSize = 1)
     private Long id;
 
-    @Pattern(regexp = "^[0-9]{14}$")
-    @Column(name = "cnpj", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @Max(50)
     private String razaoSocial;
 
-    @Pattern(regexp = "^[0-9]{11}$")
     private String cpfContato;
 }
