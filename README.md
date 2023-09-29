@@ -4,8 +4,8 @@ Desafio Cielo Bootcamp
 ### Desafio 1
 
 - [x] Criação da classe abstrata Cliente e duas subclasses
-- [] Criação das validações dos campos com as anotações 
-- [] Criação da validação Cadastrar Cliente
-- [] Criação da validação Alterar Cliente
-- [] Criação da validação Consultar Cliente
-- [] Testes Unitários Cobrindo 70% do código mínimo
+- [x] Criação das validações dos campos com as anotações 
+- [x] Criação da validação Cadastrar Cliente
+- [x] Criação da validação Alterar Cliente
+- [x] Criação da validação Consultar Cliente
+- [x] Testes Unitários Cobrindo 70% do código mínimo
