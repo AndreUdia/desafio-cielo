@@ -1,4 +1,4 @@
-package com.cielo.desafio.cliente.pessoafisica;
+package com.cielo.desafio.cliente;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @ToString
 @AllArgsConstructor
-public class PessoaFisicaRequest {
+public class PessoaFisicaRequest implements ClienteRequest {
 
     @Pattern(regexp = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
             message = "Não é um formato de identificador válido")
@@ -18,7 +18,7 @@ public class PessoaFisicaRequest {
     private String categoriaComercial;
 
     @Pattern(regexp = "[0-9]{11}", message = "O CPF deve ser composto por 11 dígitos")
-    private String cpf;
+    private String cadastroNacional;
 
     @Pattern(regexp = "[a-zA-Z]{1,50}",
             message = "O nome deve ser composto só por letras e ter no máximo 50 caracteres")

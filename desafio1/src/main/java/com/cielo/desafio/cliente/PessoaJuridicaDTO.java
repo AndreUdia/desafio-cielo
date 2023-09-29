@@ -1,5 +1,6 @@
-package com.cielo.desafio.cliente.pessoajuridica;
+package com.cielo.desafio.cliente;
 
+import com.cielo.desafio.cliente.TipoCliente;
 import lombok.*;
 
 @Getter
@@ -9,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 public class PessoaJuridicaDTO {
     private String uuid;
-    private String cnpj;
+    private String cadastroNacional;
     private String razaoSocial;
     private String categoriaComercial;
     private String cpfContato;

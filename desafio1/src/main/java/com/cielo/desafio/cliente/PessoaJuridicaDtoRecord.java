@@ -1,13 +1,13 @@
-package com.cielo.desafio.cliente.pessoajuridica;
+package com.cielo.desafio.cliente;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record PessoaJuridicaDtoRecord(String uuid, String cnpj,String razaoSocial,String categoriaComercial,
+public record PessoaJuridicaDtoRecord(String uuid, String cadastroNacional,String razaoSocial,String categoriaComercial,
                                         String cpfContato, String nome, String email) {
     public PessoaJuridicaDtoRecord(PessoaJuridicaDTO pessoaJuridicaDTO){
         this(pessoaJuridicaDTO.getUuid(),
-                pessoaJuridicaDTO.getCnpj(),
+                pessoaJuridicaDTO.getCadastroNacional(),
                 pessoaJuridicaDTO.getRazaoSocial(),
                 pessoaJuridicaDTO.getCategoriaComercial(),
                 pessoaJuridicaDTO.getCpfContato(),

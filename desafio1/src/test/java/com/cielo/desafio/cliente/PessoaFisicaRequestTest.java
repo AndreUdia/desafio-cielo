@@ -1,4 +1,4 @@
-package com.cielo.desafio.cliente.pessoafisica;
+package com.cielo.desafio.cliente;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

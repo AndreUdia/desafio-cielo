@@ -1,4 +1,4 @@
-package com.cielo.desafio.cliente.pessoajuridica;
+package com.cielo.desafio.cliente;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -11,15 +11,15 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class PessoaJuridicaRequest {
+public class PessoaJuridicaRequest implements ClienteRequest {
 
     @Pattern(regexp = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
             message = "Não é um formato de identificador válido")
     private String uuid;
 
-    @Pattern(regexp = "[0-9]{11}",
+    @Pattern(regexp = "[0-9]{14}",
             message = "O CNPJ deve ser composto por 14 dígitos")
-    private String cnpj;
+    private String cadastroNacional;
 
     @Size(min = 1, max = 50,
             message = "A razão social deve conter no máximo 50 caracteres")
