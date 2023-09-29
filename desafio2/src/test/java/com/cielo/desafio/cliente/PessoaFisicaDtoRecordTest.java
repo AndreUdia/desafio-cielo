@@ -12,8 +12,7 @@ public class PessoaFisicaDtoRecordTest {
                                                                 "1111",
                                                                 "12345678900",
                                                                 "nome",
-                                                                "email@email",
-                                                                 null);
+                                                                "email@email");
         PessoaFisicaDtoRecord record = new PessoaFisicaDtoRecord(pessoaFisicaDTO);
 
         assertEquals("fc0a4d58-0399-4b19-bdea-43d7042b9c7b", record.uuid());

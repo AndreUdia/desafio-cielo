@@ -1,5 +1,6 @@
 package com.cielo.desafio.cliente;
 
+import com.cielo.desafio.utils.FilaCliente;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
@@ -8,9 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.springframework.http.HttpStatus.*;
@@ -22,6 +21,8 @@ public class ClienteRestController {
 
     private final ClienteService service;
     private final ModelMapper modelMapper;
+
+    public static FilaCliente filaCliente = new FilaCliente(100);
 
     private PessoaFisicaDTO converterPfParaDto(PessoaFisicaRequest pessoaFisicaRequest){
         return this.modelMapper.map(pessoaFisicaRequest, PessoaFisicaDTO.class);
@@ -79,7 +80,11 @@ public class ClienteRestController {
             return new ResponseEntity<>("Este cliente já possui cadastro", CONFLICT);
         }
 
-        this.service.salvarCliente(this.converterParaEntidade(pessoaFisicaDTO), TipoCliente.PF);
+        Cliente clienteParaSalvar = this.converterParaEntidade(pessoaFisicaDTO);
+
+        this.service.salvarCliente(clienteParaSalvar, TipoCliente.PF);
+
+        this.adicionarClienteNaFila(clienteParaSalvar);
 
         return new ResponseEntity<>("Cliente cadastrado com sucesso!", CREATED);
 
@@ -100,7 +105,10 @@ public class ClienteRestController {
             cliente.get().setCadastroNacional(pessoaFisicaRequest.getCadastroNacional());
             cliente.get().setNome(pessoaFisicaRequest.getNome());
             cliente.get().setEmail(pessoaFisicaRequest.getEmail());
+
             this.service.salvarCliente(cliente.get(), TipoCliente.PF);
+
+            this.adicionarClienteNaFila(cliente.get());
 
             return new ResponseEntity<>("Dados alterados com sucesso!", OK);
         }
@@ -136,7 +144,11 @@ public class ClienteRestController {
             return new ResponseEntity<>("Este cliente já possui cadastro", CONFLICT);
         }
 
-        this.service.salvarCliente(this.modelMapper.map(pessoaJuridicaDTO, Cliente.class), TipoCliente.PJ);
+        Cliente clienteParaSalvar = this.modelMapper.map(pessoaJuridicaDTO, Cliente.class);
+
+        this.service.salvarCliente(clienteParaSalvar, TipoCliente.PJ);
+
+        this.adicionarClienteNaFila(clienteParaSalvar);
 
         return new ResponseEntity<>("Cliente cadastrado com sucesso!", CREATED);
 
@@ -150,15 +162,17 @@ public class ClienteRestController {
             return new ResponseEntity<>(validacoes, BAD_REQUEST);
         }
 
-        Optional<Cliente> pessoaJuridica = this.service.findByUuid(pessoaJuridicaRequest.getUuid());
+        Optional<Cliente> cliente = this.service.findByUuid(pessoaJuridicaRequest.getUuid());
 
-        if (pessoaJuridica.isPresent()){
-            pessoaJuridica.get().setCategoriaComercial(pessoaJuridicaRequest.getCategoriaComercial());
-            pessoaJuridica.get().setCadastroNacional(pessoaJuridicaRequest.getCadastroNacional());
-            pessoaJuridica.get().setNome(pessoaJuridicaRequest.getNome());
-            pessoaJuridica.get().setEmail(pessoaJuridicaRequest.getEmail());
+        if (cliente.isPresent()){
+            cliente.get().setCategoriaComercial(pessoaJuridicaRequest.getCategoriaComercial());
+            cliente.get().setCadastroNacional(pessoaJuridicaRequest.getCadastroNacional());
+            cliente.get().setNome(pessoaJuridicaRequest.getNome());
+            cliente.get().setEmail(pessoaJuridicaRequest.getEmail());
 
-            this.service.salvarCliente(pessoaJuridica.get(), TipoCliente.PJ);
+            this.service.salvarCliente(cliente.get(), TipoCliente.PJ);
+
+            this.adicionarClienteNaFila(cliente.get());
 
             return new ResponseEntity<>("Dados alterados com sucesso!", OK);
         }
@@ -180,5 +194,28 @@ public class ClienteRestController {
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> listarTodosClientes(){
         return new ResponseEntity<>(this.service.listarTodosClientes(), OK);
+    }
+
+    @GetMapping("/filas/retirada")
+    public ResponseEntity<?> proximoCliente() {
+        if (filaCliente.estaVazia()) {
+            return new ResponseEntity<>("Não há clientes aguardando atendimento!", NOT_FOUND);
+        }
+
+        Cliente cliente = filaCliente.desenfileirar();
+
+        if (cliente.getTipoCliente().equals(TipoCliente.PF)){
+            return new ResponseEntity<>(this.modelMapper.map(cliente, PessoaFisicaDTO.class), OK);
+        }
+
+        if (cliente.getTipoCliente().equals(TipoCliente.PJ)){
+            return new ResponseEntity<>(this.modelMapper.map(cliente, PessoaJuridicaDTO.class), OK);
+        }
+
+        return new ResponseEntity<>("Erro no servidor - Não foi possível extrair clientes da lista", INTERNAL_SERVER_ERROR);
+    }
+
+    private void adicionarClienteNaFila(Cliente cliente) {
+        filaCliente.enfileirar(cliente);
     }
 }

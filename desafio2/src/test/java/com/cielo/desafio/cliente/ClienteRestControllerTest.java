@@ -1,6 +1,8 @@
 package com.cielo.desafio.cliente;
 
+import com.cielo.desafio.utils.FilaCliente;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -8,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -15,6 +19,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,30 +41,15 @@ public class ClienteRestControllerTest {
     @Mock
     private ModelMapper modelMapper;
 
+    @Mock
+    private ClienteRestController clienteRestController;
+
     @Test
     void deveListarTodosOsClientes() throws Exception {
         Mockito.when(this.clienteService.listarTodosClientes())
                 .thenReturn(new ArrayList<>(){});
 
         mockMvc.perform(get("/api/clientes"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void deveListarTodasAsPessoasFisicas() throws Exception {
-        Mockito.when(this.clienteService.listarTodas(TipoCliente.PF))
-                .thenReturn(new ArrayList<>(){});
-
-        mockMvc.perform(get("/api/clientes/pessoasfisicas"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void deveListarTodasAsPessoasJuridicas() throws Exception {
-        Mockito.when(this.clienteService.listarTodas(TipoCliente.PJ))
-                .thenReturn(new ArrayList<>(){});
-
-        mockMvc.perform(get("/api/clientes/pessoasjuridicas"))
                 .andExpect(status().isOk());
     }
 
@@ -367,4 +358,12 @@ public class ClienteRestControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Não há cliente cadastrado com o código recebido!"));
     }
+
+    @Test
+    public void testProximoClienteFilaVazia() throws Exception {
+        mockMvc.perform(get("/api/filas/retirada")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
 }

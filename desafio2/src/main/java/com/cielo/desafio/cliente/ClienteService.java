@@ -27,19 +27,17 @@ public class ClienteService {
     }
 
     public List<PessoaFisicaDtoRecord> buscarTodasPessoasFisicas(){
-        return this.repository.findByTipoCliente(TipoCliente.PF).stream()
+        return this.repository.findAll().stream()
+                .filter(cliente -> cliente.getTipoCliente().equals(TipoCliente.PF))
                 .map(this::converterPfParaDto)
                 .map(PessoaFisicaDtoRecord::new).toList();
     }
 
     public List<PessoaJuridicaDtoRecord> buscarTodasPessoasJuridicas(){
-        return this.repository.findByTipoCliente(TipoCliente.PJ).stream()
+        return this.repository.findAll().stream()
+                .filter(cliente -> cliente.getTipoCliente().equals(TipoCliente.PJ))
                 .map(this::converterPjParaDto)
                 .map(PessoaJuridicaDtoRecord::new).toList();
-    }
-
-    public List<Cliente> listarTodas(TipoCliente tipoCliente){
-        return this.repository.findByTipoCliente(tipoCliente).stream().toList();
     }
 
     public List<ClienteDTO> listarTodosClientes(){

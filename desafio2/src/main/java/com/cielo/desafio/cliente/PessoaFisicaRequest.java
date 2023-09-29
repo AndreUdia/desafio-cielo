@@ -23,7 +23,7 @@ public class PessoaFisicaRequest implements ClienteRequest {
     @Pattern(regexp = "[0-9]{11}", message = "O CPF deve ser composto por 11 dígitos")
     private String cadastroNacional;
 
-    @Pattern(regexp = "[a-zA-Z]{1,50}",
+    @Pattern(regexp = "[a-zA-Z ]{1,50}",
             message = "O nome deve ser composto só por letras e ter no máximo 50 caracteres")
     private String nome;
 

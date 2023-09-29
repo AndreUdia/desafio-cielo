@@ -13,5 +13,4 @@ public class PessoaFisicaDTO {
     private String cadastroNacional;
     private String nome;
     private String email;
-    private String cpfContato;
 }

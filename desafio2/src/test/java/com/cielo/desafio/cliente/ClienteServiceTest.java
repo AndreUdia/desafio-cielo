@@ -41,18 +41,6 @@ class ClienteServiceTest {
     }
 
     @Test
-    void testListarTodas() {
-        List<Cliente> pessoaFisicaList = new ArrayList<>();
-        pessoaFisicaList.add(cliente);
-
-        when(repository.findByTipoCliente(TipoCliente.PF)).thenReturn(Optional.of(cliente));
-
-        List<Cliente> result = service.listarTodas(TipoCliente.PF);
-
-        assertEquals(pessoaFisicaList.size(), result.size());
-    }
-
-    @Test
     void testSalvarCliente() {
         service.salvarCliente(cliente, TipoCliente.PF);
         verify(repository).save(cliente);
@@ -90,5 +78,15 @@ class ClienteServiceTest {
         assertFalse(resultado.isPresent());
         assertEquals(Optional.empty(), resultado);
         verify(repository).findByUuid(uuid);
+    }
+
+    @Test
+    public void testBuscarDtoPfPorUUIDClienteInexistente() {
+        String uuid = "111111111";
+        when(repository.findByUuid(uuid)).thenReturn(Optional.empty());
+
+        Optional<PessoaFisicaDTO> result = service.buscarDtoPfPorUUID(uuid);
+
+        assertFalse(result.isPresent());
     }
 }
