@@ -34,3 +34,13 @@ spring.cloud.aws.messaging.defaultDestination                         = https://
 
 Para funcionamento, deverá ser criado um usuário que tenha acesso a leitura de SQS para retirada e um com acesso SQL FULL, substituir nas configurações acima
 dentro de aplication.properties
+
+### Desafio 4
+
+###### Débito Técnico
+- Conforme há dados de CPF e CNPJ entre outros dados pessoais e estratégicos, a aplicação precisaria de uma autenticação de login e tipo de perfil para cada um dos endereços da API, para isso irei montar a parte de JWT token para assegurar os endpoints.
+
+- [x] Implementar JWT na aplicação
+- [x] Usar os filter chains do spring security
+
+Observação : Não consegui implementar toda a parte de segurança no tempo, farei o push da parte ajustada, basicamente seguindo a documentação, na requisição o sistema passaria por um filtro e validaria o token JWT e permetiria ou não prosseguir com a requisição.
